@@ -1,0 +1,25 @@
+# Angular/Node
+dist/
+tmp/
+out-tsc/
+bazel-out/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment
+.env
+*.env
+
+# Angular cache
+.angular/cache
+.sass-cache/
+
+# Testing
+coverage/
+testem.log
+
+# Miscellaneous
+connect.lock
+libpeerconnection.log
+typings/

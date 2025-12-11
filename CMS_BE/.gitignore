@@ -1,0 +1,24 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+.vs/
+
+# Environment
+.env
+*.env
+appsettings.Development.json
+
+# Database
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# Logs
+*.log
