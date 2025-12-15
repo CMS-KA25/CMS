@@ -8,6 +8,6 @@ namespace CMS.Domain.Clinic.Enums
 {
     public enum LeaveStatus
     {
-        pending=2, approved=1, rejected=0
+        Rejected=0, Approved=1, Pending=2
     }
 }

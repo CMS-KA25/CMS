@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Domain.Auth.Entities
 {
-    public class User_Sessions
+    public class UserSession
     {
         public Guid SessionID { get; set; }
         public Guid UserID { get; set; }
@@ -17,13 +17,12 @@ namespace CMS.Domain.Auth.Entities
         public DateTime LoginTimestamp { get; set; }
         public DateTime LastActivityTimestamp { get; set; }
         public DateTime ExpiryTimestamp { get; set; }
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; }
         public DateTime? LogoutTimestamp { get; set; }
         public string LogoutReason { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-
-
-        //public User User { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 }

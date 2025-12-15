@@ -11,10 +11,9 @@ using System.Threading.Tasks;
 
 namespace CMS.Domain.Billing.Entities
 {
-    public class Patient_Bill
+    public class PatientBill
     {
         public Guid BillID { get; set; }
-        public Guid PatientID { get; set; }
         public Guid EncounterID { get; set; }
         public Guid TemplateID { get; set; }
         //public string BillType { get; set; }
@@ -26,10 +25,11 @@ namespace CMS.Domain.Billing.Entities
         [Required]
         public decimal FinalAmount { get; set; }
         public DateTime BillDate { get; set; }
-        public Guid DoctorID { get; set; }
         public BillStatusType Status { get; set; } 
         public Guid CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
 
         //public Patient Patient { get; set; }

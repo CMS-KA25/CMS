@@ -27,6 +27,8 @@ namespace CMS.Domain.Auth.Entities
         public DateTime GeneratedOn { get; set; }
         public DateTime AccessTokenExpiresOn { get; set; }
         public DateTime? RefreshTokenExpiresOn { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public bool IsTokenExpired => DateTime.UtcNow >= AccessTokenExpiresOn;
         public bool IsRefreshTokenExpired => RefreshTokenExpiresOn.HasValue && DateTime.UtcNow >= RefreshTokenExpiresOn.Value;
 

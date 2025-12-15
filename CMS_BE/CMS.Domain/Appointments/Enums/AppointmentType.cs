@@ -8,6 +8,6 @@ namespace CMS.Domain.Appointments.Enums
 {
     public enum AppointmentType
     {
-        consultation=1,followUp=2,Emergency=3
+        Consultation=1,FollowUp=2,Emergency=3
     }
 }

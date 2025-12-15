@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Domain.Billing.Entities
 {
-    public class Bill_Template
+    public class BillTemplate
     {
         public Guid TemplateID { get; set; }
         [Required]
@@ -20,6 +20,8 @@ namespace CMS.Domain.Billing.Entities
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
 
         //public ICollection<Patient_Bills> Bills { get; set; }

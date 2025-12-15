@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Domain.Appointments.Entities
 {
-    public class Time_Slot
+    public class TimeSlot
     {
         public Guid SlotID { get; set; }
         public Guid DoctorID { get; set; }
@@ -16,6 +16,8 @@ namespace CMS.Domain.Appointments.Entities
         public TimeSpan EndTime { get; set; }
         public bool IsAvailable { get; set; } = true;
         public DateTime CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
 
         //public Doctor Doctor { get; set; }

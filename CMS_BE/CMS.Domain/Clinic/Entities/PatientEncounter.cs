@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace CMS.Domain.Clinic.Entities
 {
-    public class Patient_Encounter
+    public class PatientEncounter
     {
         public Guid EncounterID { get; set; }
         public Guid PatientID { get; set; }
         public Guid DoctorID { get; set; }
-        //public DateOnly Encounter_date { get; set; }
-        //public string Encounter_type { get; set; }
-        //public string Reason_description { get; set; }
         public string Description { get; set; }
         public Guid? Parent_Encounter_ID { get; set; }
         public Guid AppointmentID { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
+        //public DateOnly Encounter_date { get; set; }
+        //public string Encounter_type { get; set; }
+        //public string Reason_description { get; set; }
 
         //public Patient Patient { get; set; }
         //public Doctor Doctor { get; set; }

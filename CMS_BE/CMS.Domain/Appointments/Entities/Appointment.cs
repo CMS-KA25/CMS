@@ -15,7 +15,6 @@ namespace CMS.Domain.Appointments.Entities
         public Guid AppointmentID { get; set; }
         public Guid PatientID { get; set; }
         public Guid DoctorID { get; set; }
-        //public DateTime AppointmentDate { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         [Required]
@@ -25,10 +24,12 @@ namespace CMS.Domain.Appointments.Entities
         public AppointmentType AppointmentType { get; set; }
         public string GoogleCalendarEventID { get; set; }
         [Required]
-        public string Reason_description { get; set; }
+        public string ReasonForVisit { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public Guid CreatedBy { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
 
         //public Patient Patient { get; set; }
