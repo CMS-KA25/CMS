@@ -9,14 +9,17 @@ namespace CMS.Domain.EMR.Entities
 {
     public class Observation
     {
-        public Guid ObservationId { get; set; }
-        public Guid Encounter_Id { get; set; }
-        public string Observations_Name { get; set; }
-        public string Reference_range { get; set; }
+        public Guid ObservationID { get; set; }
+        public Guid EncounterID { get; set; }
+        public string ObservationName { get; set; }
+        public string ReferenceRange { get; set; }
         public string Value { get; set; }
         public string Unit { get; set; }
         public DateTime DateRecorded { get; set; }
-        public Guid Staff_id { get; set; }
+        public Guid StaffID { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
 
         //public Patient_Encounter Encounter { get; set; }

@@ -8,6 +8,6 @@ namespace CMS.Domain.Clinic.Enums
 {
     public enum QueueStatusType
     {
-        waiting=1,inProgress=2,completed=3,cancelled=4,noShow=5,
+        Waiting=1,InProgress=2,Completed=3,Cancelled=4,NoShow=5
     }
 }

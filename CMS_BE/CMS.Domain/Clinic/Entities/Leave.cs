@@ -23,6 +23,8 @@ namespace CMS.Domain.Clinic.Entities
         public LeaveStatus Status { get; set; } 
         public DateTime LeaveApplied { get; set; }
         public bool IsFullDay { get; set; } = true;
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
 
         //public User User { get; set; }

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace CMS.Domain.EMR.Entities
 {
-    public class Prescriptions
+    public class Prescription
     {
-        public Guid PrescriptionId { get; set; }
-        public Guid EncounterId { get; set; }
-        public Guid DoctorId { get; set; }
+        public Guid PrescriptionID { get; set; }
+        public Guid EncounterID { get; set; }
+        public Guid DoctorID { get; set; }
         [Required]
         public string MedicationName { get; set; }
         [Required]
@@ -25,6 +25,9 @@ namespace CMS.Domain.EMR.Entities
         public string Duration { get; set; }
         [Required]
         public string Notes { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
 
         //public Patient_Encounter Encounter { get; set; }
