@@ -2,12 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-
-interface DoctorOption {
-  id: string;
-  name: string;
-  specialization: string;
-}
+import { Doctor } from '../../../calendar/services/calendar.service';
 
 @Component({
   selector: 'app-doctor-selector',
@@ -17,9 +12,9 @@ interface DoctorOption {
   styleUrl: './doctor-selector.component.css',
 })
 export class DoctorSelectorComponent {
-  @Input() doctors: DoctorOption[] = [];
+  @Input() doctors: Doctor[] = [];
   @Input() selectedDrId = '';
-  @Output() doctorChange = new EventEmitter<DoctorOption>();
+  @Output() doctorChange = new EventEmitter<Doctor>();
 
   onDrSelect(id: string) {
     this.selectedDrId = id;

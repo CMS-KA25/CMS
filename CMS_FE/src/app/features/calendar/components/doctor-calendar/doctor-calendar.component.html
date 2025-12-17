@@ -1,0 +1,134 @@
+<div class="calendar-container">
+    <mat-card class="calendar-card">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>calendar_today</mat-icon>
+                {{ isDoctor ? 'My Appointments' : 'Book an Appointment' }}
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <!-- Doctor Selection (for patients) -->
+            <div class="doctor-selection" *ngIf="!isDoctor">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Select Doctor</mat-label>
+                    <mat-select [(value)]="selectedDoctor" (selectionChange)="onDoctorSelected($event.value)">
+                        <mat-option *ngFor="let doctor of doctors()" [value]="doctor">
+                            <div class="doctor-option">
+                                <img *ngIf="doctor.profilePictureURL" [src]="doctor.profilePictureURL"
+                                    alt="{{doctor.name}}" class="doctor-avatar">
+                                <div class="doctor-info">
+                                    <strong>{{ doctor.name }}</strong>
+                                    <span class="specialization">{{ doctor.specialization }}</span>
+                                    <span class="experience">{{ doctor.yearOfExperience }} years exp.</span>
+                                </div>
+                            </div>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Doctor Info Card (when selected) -->
+            <div class="doctor-info-card" *ngIf="selectedDoctor()">
+                <div class="doctor-header">
+                    <img *ngIf="selectedDoctor()?.profilePictureURL" [src]="selectedDoctor()!.profilePictureURL"
+                        alt="{{selectedDoctor()!.name}}" class="doctor-profile-pic">
+                    <div class="doctor-details">
+                        <h3>{{ selectedDoctor()!.name }}</h3>
+                        <p class="specialization">{{ selectedDoctor()!.specialization }}</p>
+                        <p class="qualification">{{ selectedDoctor()!.qualification }}</p>
+                        <mat-chip-set>
+                            <mat-chip>{{ selectedDoctor()!.yearOfExperience }} years experience</mat-chip>
+                            <mat-chip *ngIf="selectedDoctor()!.startTime && selectedDoctor()!.endTime">
+                                {{ selectedDoctor()!.startTime }} - {{ selectedDoctor()!.endTime }}
+                            </mat-chip>
+                        </mat-chip-set>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar and Slots Section -->
+            <div class="calendar-section" *ngIf="selectedDoctor() || isDoctor">
+                <div class="calendar-wrapper">
+                    <h3>Select Date</h3>
+                    <mat-calendar [(selected)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate"
+                        [dateFilter]="dateFilter" (selectedChange)="onDateSelected($event)">
+                    </mat-calendar>
+                </div>
+
+                <!-- Available Time Slots (for patients) -->
+                <div class="slots-wrapper" *ngIf="!isDoctor">
+                    <h3>Available Slots for {{ selectedDate() | date:'mediumDate' }}</h3>
+
+                    <div *ngIf="loading()" class="loading-container">
+                        <mat-spinner diameter="40"></mat-spinner>
+                        <p>Loading available slots...</p>
+                    </div>
+
+                    <div *ngIf="!loading() && availableSlots().length === 0" class="no-slots">
+                        <mat-icon>event_busy</mat-icon>
+                        <p>No available slots for this date</p>
+                    </div>
+
+                    <div class="slots-grid" *ngIf="!loading() && availableSlots().length > 0">
+                        <button *ngFor="let slot of availableSlots()" mat-raised-button
+                            [color]="slot.isBooked ? 'warn' : 'primary'" [disabled]="slot.isBooked || !slot.isAvailable"
+                            (click)="bookSlot(slot)" class="slot-button">
+                            <mat-icon>{{ slot.isBooked ? 'event_busy' : 'event_available' }}</mat-icon>
+                            {{ slot.startTime }} - {{ slot.endTime }}
+                            <span class="slot-status" *ngIf="slot.isBooked">(Booked)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Appointments List (for doctors) -->
+                <div class="appointments-wrapper" *ngIf="isDoctor">
+                    <h3>Your Appointments</h3>
+
+                    <div *ngIf="loading()" class="loading-container">
+                        <mat-spinner diameter="40"></mat-spinner>
+                        <p>Loading appointments...</p>
+                    </div>
+
+                    <div *ngIf="!loading() && appointments().length === 0" class="no-appointments">
+                        <mat-icon>event_note</mat-icon>
+                        <p>No appointments scheduled</p>
+                    </div>
+
+                    <div class="appointments-list" *ngIf="!loading() && appointments().length > 0">
+                        <mat-card *ngFor="let appointment of appointments()" class="appointment-card">
+                            <mat-card-content>
+                                <div class="appointment-info">
+                                    <div class="appointment-time">
+                                        <mat-icon>schedule</mat-icon>
+                                        <span>{{ appointment.appointmentDate | date:'mediumDate' }}</span>
+                                        <span>{{ appointment.startTime }} - {{ appointment.endTime }}</span>
+                                    </div>
+                                    <div class="appointment-status">
+                                        <mat-chip [color]="appointment.status === 'Scheduled' ? 'primary' : 'accent'">
+                                            {{ appointment.status }}
+                                        </mat-chip>
+                                    </div>
+                                </div>
+                                <div class="appointment-actions">
+                                    <button mat-button color="warn" *ngIf="appointment.status === 'Scheduled'"
+                                        (click)="cancelAppointment(appointment.id!)">
+                                        <mat-icon>cancel</mat-icon>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" *ngIf="!selectedDoctor() && !isDoctor">
+                <mat-icon>person_search</mat-icon>
+                <h3>Select a Doctor</h3>
+                <p>Choose a doctor from the list above to view available appointment slots</p>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

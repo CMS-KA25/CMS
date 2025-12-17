@@ -9,10 +9,11 @@ export interface User {
 }
 
 export enum RoleType {
-  User = 1,
-  Staff = 2,
-  Doctor = 3,
-  Admin = 4
+  User = 'User',
+  Staff = 'Staff',
+  Doctor = 'Doctor',
+  Admin = 'Admin',
+  Patient = 'Patient'
 }
 
 export interface LoginRequest {
@@ -31,7 +32,7 @@ export interface InviteUserRequest {
   email: string;
   name?: string;
   phoneNumber?: string;
-  role: number;
+  role: RoleType;
 }
 
 export interface LoginResponse {

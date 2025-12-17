@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 import { ApiService } from './api.service';
-import { User, LoginRequest, SignUpRequest, LoginResponse, ApiResponse, VerifyOtpRequest, ForgotPasswordRequest, ResetPasswordRequest, InviteUserRequest } from '../../shared/models/auth.models';
+import { User, RoleType, LoginRequest, SignUpRequest, LoginResponse, ApiResponse, VerifyOtpRequest, ForgotPasswordRequest, ResetPasswordRequest, InviteUserRequest } from '../../shared/models/auth.models';
 
 @Injectable({
   providedIn: 'root'
@@ -103,7 +103,7 @@ export class AuthService {
     );
   }
 
-  bulkInvite(file: File, role: number): Observable<ApiResponse<any>> {
+  bulkInvite(file: File, role: RoleType): Observable<ApiResponse<any>> {
     this.apiService.setLoading(true);
     const fd = new FormData();
     fd.append('file', file);
@@ -121,7 +121,7 @@ export class AuthService {
     return this.apiService.download(`auth/bulk-invite/template?format=${encodeURIComponent(format)}`);
   }
 
-  resendInvite(email: string, role: number): Observable<ApiResponse<any>> {
+  resendInvite(email: string, role: RoleType): Observable<ApiResponse<any>> {
     this.apiService.setLoading(true);
     return this.apiService.post<ApiResponse<any>>('auth/resend-invite', { email, role }).pipe(
       tap(() => this.apiService.setLoading(false)),
