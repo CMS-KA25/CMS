@@ -24,6 +24,7 @@ namespace CMS.Domain.Auth.Entities
         public DateTime UpdatedAt { get; set; }
 
 
-        //public User User { get; set; }
+        // Navigation property
+        public User? User { get; set; }
     }
 }

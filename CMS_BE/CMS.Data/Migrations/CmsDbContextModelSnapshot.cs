@@ -22,6 +22,7 @@ namespace CMS.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+<<<<<<< HEAD
             modelBuilder.Entity("CMS.Domain.Appointments.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("AppointmentID")
@@ -54,10 +55,35 @@ namespace CMS.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("IsDeleted")
+=======
+            modelBuilder.Entity("CMS.Domain.Auth.Entities.Invitation", b =>
+                {
+                    b.Property<Guid>("InvitationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("InvitedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAccepted")
+>>>>>>> feature/auth-api
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+<<<<<<< HEAD
                     b.Property<Guid>("PatientID")
                         .HasColumnType("uniqueidentifier");
 
@@ -202,29 +228,59 @@ namespace CMS.Data.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("AuditLogs");
+=======
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("InvitationId");
+
+                    b.ToTable("Invitations");
+>>>>>>> feature/auth-api
                 });
 
             modelBuilder.Entity("CMS.Domain.Auth.Entities.Token", b =>
                 {
                     b.Property<Guid>("TokenID")
                         .ValueGeneratedOnAdd()
+<<<<<<< HEAD
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccessToken")
+=======
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+>>>>>>> feature/auth-api
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "access_token");
 
                     b.Property<DateTime>("AccessTokenExpiresOn")
                         .HasColumnType("datetime2");
 
+<<<<<<< HEAD
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+=======
+>>>>>>> feature/auth-api
                     b.Property<int>("ExpiresIn")
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "expires_in");
 
                     b.Property<DateTime>("GeneratedOn")
+<<<<<<< HEAD
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
@@ -233,6 +289,9 @@ namespace CMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+=======
+                        .HasColumnType("datetime2");
+>>>>>>> feature/auth-api
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)")
@@ -267,6 +326,7 @@ namespace CMS.Data.Migrations
                 {
                     b.Property<Guid>("UserID")
                         .ValueGeneratedOnAdd()
+<<<<<<< HEAD
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -275,12 +335,23 @@ namespace CMS.Data.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateTime?>("DeletedAt")
+=======
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+>>>>>>> feature/auth-api
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
+<<<<<<< HEAD
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+=======
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+>>>>>>> feature/auth-api
 
                     b.Property<string>("GoogleID")
                         .HasColumnType("nvarchar(max)");
@@ -288,6 +359,7 @@ namespace CMS.Data.Migrations
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
+<<<<<<< HEAD
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsDeleted")
@@ -307,11 +379,29 @@ namespace CMS.Data.Migrations
 
                     b.Property<long>("PhoneNumber")
                         .HasColumnType("bigint");
+=======
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+>>>>>>> feature/auth-api
 
                     b.Property<string>("ProfilePictureURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
+<<<<<<< HEAD
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(4);
@@ -338,18 +428,47 @@ namespace CMS.Data.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateTime?>("DeletedAt")
+=======
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserID");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CMS.Domain.Auth.Entities.User_Sessions", b =>
+                {
+                    b.Property<Guid>("SessionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+>>>>>>> feature/auth-api
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeviceInfo")
                         .IsRequired()
+<<<<<<< HEAD
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+=======
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+>>>>>>> feature/auth-api
 
                     b.Property<DateTime>("ExpiryTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("IPAddress")
                         .IsRequired()
+<<<<<<< HEAD
                         .HasMaxLength(45)
                         .HasColumnType("nvarchar(45)");
 
@@ -360,6 +479,15 @@ namespace CMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+=======
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+>>>>>>> feature/auth-api
 
                     b.Property<DateTime>("LastActivityTimestamp")
                         .HasColumnType("datetime2");
@@ -369,14 +497,19 @@ namespace CMS.Data.Migrations
 
                     b.Property<string>("LogoutReason")
                         .IsRequired()
+<<<<<<< HEAD
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+=======
+                        .HasColumnType("nvarchar(max)");
+>>>>>>> feature/auth-api
 
                     b.Property<DateTime?>("LogoutTimestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SessionToken")
                         .IsRequired()
+<<<<<<< HEAD
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -384,6 +517,12 @@ namespace CMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
+=======
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+>>>>>>> feature/auth-api
 
                     b.Property<string>("UserAgent")
                         .IsRequired()
@@ -400,6 +539,7 @@ namespace CMS.Data.Migrations
                     b.ToTable("UserSessions");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("CMS.Domain.Billing.Entities.BillTemplate", b =>
                 {
                     b.Property<Guid>("TemplateID")
@@ -885,10 +1025,21 @@ namespace CMS.Data.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("BloodGroup")
+=======
+            modelBuilder.Entity("CMS.Domain.Auth.Entities.VerificationCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Code")
+>>>>>>> feature/auth-api
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+<<<<<<< HEAD
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
@@ -940,10 +1091,20 @@ namespace CMS.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
+=======
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+>>>>>>> feature/auth-api
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+<<<<<<< HEAD
                     b.Property<string>("MedicationName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -955,10 +1116,14 @@ namespace CMS.Data.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Unit")
+=======
+                    b.Property<string>("Purpose")
+>>>>>>> feature/auth-api
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+<<<<<<< HEAD
                     b.HasKey("PrescriptionID");
 
                     b.HasIndex("DoctorID");
@@ -1101,10 +1266,329 @@ namespace CMS.Data.Migrations
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.HasKey("TemplateID");
+=======
+                    b.Property<Guid?>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VerificationCodes");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("MaxRetries")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Metadata")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RecipientEmail")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RecipientPhone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ScheduledFor")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("TemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("ScheduledFor");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.NotificationChannel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ChannelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeliveredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeliveryReceipt")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ExternalId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("FailedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("NotificationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProviderMetadata")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelType");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("SentAt");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("NotificationChannels");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.NotificationPreference", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ChannelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomSettings")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UserRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelType");
+
+                    b.HasIndex("Type");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserRole");
+
+                    b.ToTable("NotificationPreferences");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.NotificationQueue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("MaxAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("NotificationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessingNode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ScheduledFor")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("Priority");
+
+                    b.HasIndex("ScheduledFor");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("NotificationQueues");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.NotificationTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChannelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Variables")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("ChannelType");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("Type");
+>>>>>>> feature/auth-api
 
                     b.ToTable("NotificationTemplates");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("CMS.Domain.Appointments.Entities.Appointment", b =>
                 {
                     b.HasOne("CMS.Domain.Auth.Entities.User", null)
@@ -1318,6 +1802,59 @@ namespace CMS.Data.Migrations
                         .HasForeignKey("TemplateID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+=======
+            modelBuilder.Entity("CMS.Domain.Auth.Entities.User_Sessions", b =>
+                {
+                    b.HasOne("CMS.Domain.Auth.Entities.User", "User")
+                        .WithMany("Sessions")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.Notification", b =>
+                {
+                    b.HasOne("CMS.Domain.NotificationModels.NotificationTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.NotificationChannel", b =>
+                {
+                    b.HasOne("CMS.Domain.NotificationModels.Notification", "Notification")
+                        .WithMany("Channels")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.NotificationQueue", b =>
+                {
+                    b.HasOne("CMS.Domain.NotificationModels.Notification", "Notification")
+                        .WithMany()
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
+                });
+
+            modelBuilder.Entity("CMS.Domain.Auth.Entities.User", b =>
+                {
+                    b.Navigation("Sessions");
+                });
+
+            modelBuilder.Entity("CMS.Domain.NotificationModels.Notification", b =>
+                {
+                    b.Navigation("Channels");
+>>>>>>> feature/auth-api
                 });
 #pragma warning restore 612, 618
         }
