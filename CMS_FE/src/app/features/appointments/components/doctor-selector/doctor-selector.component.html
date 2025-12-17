@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Choose Doctor</mat-label>
+  <mat-select
+    [value]="selectedDrId"
+    (selectionChange)="onDrSelect($event.value)"
+  >
+    <mat-option *ngFor="let d of doctors" [value]="d.id">
+      {{ d.name }} – {{ d.specialization }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
