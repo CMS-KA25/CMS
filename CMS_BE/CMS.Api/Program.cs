@@ -24,7 +24,8 @@ builder.Services.AddDbContext<CmsDbContext>(options =>
 
 //TODO Setup JWT
 
-//Automapper
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 //TODO Http Client
 
@@ -36,13 +37,25 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
 });
 
-// Services
+// Repository Services
+builder.Services.AddScoped<CMS.Application.Clinic.Interfaces.IDoctorRepository, CMS.Infrastructure.Clinic.Repositories.DoctorRepository>();
+builder.Services.AddScoped<CMS.Application.Clinic.Interfaces.ILeaveRepository, CMS.Infrastructure.Clinic.Repositories.LeaveRepository>();
+builder.Services.AddScoped<CMS.Application.Appointments.Interfaces.ITimeSlotRepository, CMS.Infrastructure.Appointments.Repositories.TimeSlotRepository>();
+
+// Application Services
+builder.Services.AddScoped<CMS.Application.Appointments.Interfaces.ITimeSlotService, CMS.Application.Appointments.Services.TimeSlotService>();
+builder.Services.AddScoped<CMS.Application.Clinic.Interfaces.IDoctorService, CMS.Application.Clinic.Services.DoctorService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Config CORS
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("fe", pol => pol.WithOrigins("http://localhost:4200", "http://localhost:5173")
+        .AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+});
 
 var app = builder.Build();
 
@@ -52,6 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 //TODO Register CORS
+app.UseCors("fe");
 
 // Register custom middlewares
 app.UseMiddleware<CMS.Api.Middleware.RequestCorrelationMiddleware>();
