@@ -1,0 +1,13 @@
+<div class="slots-grid">
+  <button
+    *ngFor="let slot of slots"
+    mat-button
+    [ngClass]="{
+      'slot-filled': slot === selectedSlot,
+      'slot-tonal': slot !== selectedSlot
+    }"
+    (click)="select(slot)"
+  >
+    {{ slot }}
+  </button>
+</div>

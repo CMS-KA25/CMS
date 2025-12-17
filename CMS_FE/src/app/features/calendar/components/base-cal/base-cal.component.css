@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Light grey rounded container around calendar */
+
+.calendar-shell {
+  width: 100%;
+  background-color: #fafafa;
+  border-radius: 18px;
+  border: 1px solid #e2e2e2;
+  padding: 16px 32px; /* reduced vertical padding */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+/* Control width + reduce overall height */
+
+.mat-calendar {
+  width: 100%;
+  max-width: 640px;
+  --mat-calendar-body-label-text-size: 11px;
+  --mat-calendar-body-cell-text-size: 13px;
+}
+
+/* Optional: tighten row heights */
+.mat-calendar-body-cell {
+  height: 36px;
+}
+
+/* Weekend style if using dateClass */
+
+.weekend-date .mat-calendar-body-cell-content {
+  color: rgba(0, 0, 0, 0.3);
+}
