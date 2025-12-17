@@ -28,8 +28,7 @@ namespace CMS.Data
         public DbSet<Observation> Observations { get; set; }
         public DbSet<MedicalReport> MedicalReports { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
-        public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
-        public DbSet<NotificationInstance> NotificationInstances { get; set; }
+       
         public DbSet<BillTemplate> BillTemplates { get; set; }
         public DbSet<PatientBill> PatientBills { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
@@ -54,8 +53,6 @@ namespace CMS.Data
             modelBuilder.ApplyConfiguration(new ObservationConfiguration());
             modelBuilder.ApplyConfiguration(new MedicalReportConfiguration());
             modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
-            modelBuilder.ApplyConfiguration(new NotificationTemplateConfiguration());
-            modelBuilder.ApplyConfiguration(new NotificationInstanceConfiguration());
             modelBuilder.ApplyConfiguration(new BillTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new PatientBillConfiguration());
             modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
