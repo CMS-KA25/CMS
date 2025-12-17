@@ -1,0 +1,11 @@
+
+// Angular Material 3 theme (fixed to use the documented APIs)
+/* Use Angular Material prebuilt theme as a safe fallback so Material components render with styles */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+body {
+  font-family: 'Roboto', system-ui, Arial, sans-serif;
+  margin: 0;
+  background-color: #fff;
+  color: #000;
+}

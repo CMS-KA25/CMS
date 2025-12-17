@@ -1,0 +1,46 @@
+<div class="success-container">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h1>Payment Successful!</h1>
+    <p>Your payment has been processed successfully.</p>
+    
+    <mat-card class="payment-details">
+      <mat-card-header>
+        <mat-card-title>Payment Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="detail-row">
+          <span class="label">Consultation Fee:</span>
+          <span class="value">₹{{paymentDetails.originalAmount}}</span>
+        </div>
+        <div class="detail-row" *ngIf="paymentDetails.discountAmount > 0">
+          <span class="label">Follow-up Discount (30%):</span>
+          <span class="value discount">-₹{{paymentDetails.discountAmount}}</span>
+        </div>
+        <div class="detail-row total">
+          <span class="label">Amount Paid:</span>
+          <span class="value">₹{{paymentDetails.amount}}</span>
+        </div>
+        <div class="detail-row" *ngIf="paymentDetails.isFollowup">
+          <span class="label">Type:</span>
+          <span class="value">Follow-up Consultation</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <p>Thank you for choosing our clinic services.</p>
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="openPDF()" *ngIf="billPath">
+        <mat-icon>visibility</mat-icon>
+        Open Bill
+      </button>
+      <button mat-raised-button color="accent" (click)="downloadBill()" *ngIf="billPath">
+        <mat-icon>download</mat-icon>
+        Download Bill
+      </button>
+      <button mat-raised-button (click)="goHome()">
+        Go to Home
+      </button>
+    </div>
+  </div>
+</div>

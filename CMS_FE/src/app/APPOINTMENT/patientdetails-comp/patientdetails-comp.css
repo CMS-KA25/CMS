@@ -1,0 +1,202 @@
+.patient-container {
+  max-width: 600px;
+  margin: 10px auto;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.patient-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.patient-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field {
+  margin-bottom: 8px !important;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  min-height: 20px !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  height: 48px !important;
+}
+
+.country-code {
+  flex: 0 0 120px;
+}
+
+.phone-number {
+  flex: 1;
+}
+
+.radio-group {
+  margin: 12px 0;
+}
+
+.radio-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.radio-group mat-radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.file-upload-section {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+.file-upload-section h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.upload-fields {
+  display: flex;
+  gap: 12px;
+}
+
+.file-input {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.file-input label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.file-input input[type="file"] {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.85rem;
+}
+
+.form-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.form-actions button {
+  min-width: 100px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.back-btn {
+  color: #666 !important;
+  border-color: #ccc !important;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .patient-container {
+    margin: 10px;
+    padding: 16px;
+  }
+}
+
+::ng-deep .success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.bill-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.bill-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 350px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  position: relative;
+  z-index: 10000;
+}
+
+.bill-modal h3 {
+  margin: 0 0 16px 0;
+  text-align: center;
+  color: #333;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.bill-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 2px solid #333;
+  margin-top: 8px;
+}
+
+.bill-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}

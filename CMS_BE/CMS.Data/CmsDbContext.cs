@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using CMS.Domain;
 
 namespace CMS.Data
 {
@@ -8,9 +9,35 @@ namespace CMS.Data
         {
         }
 
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Patient>(entity =>
+            {
+                entity.HasKey(e => e.patient_id);
+
+                entity.Property(e => e.patient_id)
+                      .HasColumnName("patient_id")
+                      .HasDefaultValueSql("NEWSEQUENTIALID()") 
+                      .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.HasKey(e => e.payment_id);
+
+                entity.Property(e => e.payment_id)
+                      .HasColumnName("payment_id")
+                      .HasDefaultValueSql("NEWSEQUENTIALID()")
+                      .ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.Patient)
+                      .WithMany()
+                      .HasForeignKey(e => e.patient_id)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
             
             // Apply feature-specific configurations
             // modelBuilder.ApplyConfiguration(new AppointmentConfiguration());

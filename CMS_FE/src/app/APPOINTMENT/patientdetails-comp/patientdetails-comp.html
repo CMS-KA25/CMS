@@ -1,0 +1,173 @@
+<div class="patient-container">
+  <h2>Patient Information Form</h2>
+  
+  <form [formGroup]="patientForm" (ngSubmit)="ADD()" class="patient-form">
+
+    <!-- Date of Birth & Gender -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Date of Birth *</mat-label>
+        <input matInput [matDatepicker]="picker" [max]="maxDate" formControlName="date_of_birth" placeholder="Select date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>Date of birth is required</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Gender *</mat-label>
+        <mat-select formControlName="sex" placeholder="Select gender">
+          <mat-option value="M">Male</mat-option>
+          <mat-option value="F">Female</mat-option>
+          <mat-option value="O">Other</mat-option>
+        </mat-select>
+        <mat-error>Gender is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Location Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Country *</mat-label>
+        <input matInput formControlName="country" placeholder="Enter country">
+        <mat-error>Country is required</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Pincode *</mat-label>
+        <input matInput formControlName="pincode" placeholder="6 digits">
+        <mat-error>Valid 6-digit pincode required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>City *</mat-label>
+        <input matInput formControlName="city" placeholder="Enter city">
+        <mat-error>City is required</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>State *</mat-label>
+        <input matInput formControlName="state" placeholder="Enter state">
+        <mat-error>State is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Address & Marital Status -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address" placeholder="Enter address">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Marital Status</mat-label>
+        <mat-select formControlName="marital_status" placeholder="Select status">
+          <mat-option *ngFor="let status of maritalStatuses" [value]="status">{{status}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Blood Group & Allergies -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Blood Group *</mat-label>
+        <mat-select formControlName="blood_group" placeholder="Select blood group">
+          <mat-option *ngFor="let group of bloodGroups" [value]="group">{{group}}</mat-option>
+        </mat-select>
+        <mat-error>Blood group is required</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Allergies</mat-label>
+        <input matInput formControlName="allergies" placeholder="Enter allergies">
+      </mat-form-field>
+    </div>
+
+    <!-- Medical Complaints -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Chief Medical Complaints</mat-label>
+      <textarea matInput rows="2" formControlName="chief_medical_complaints" placeholder="Describe complaints"></textarea>
+    </mat-form-field>
+
+    <!-- Previous Consultation -->
+    <div class="radio-group">
+      <label>Consulted with us before?</label>
+      <mat-radio-group formControlName="consulted_before">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Conditional Fields -->
+    <div class="form-row" *ngIf="patientForm.get('consulted_before')?.value">
+      <mat-form-field appearance="outline">
+        <mat-label>Doctor Name</mat-label>
+        <input matInput formControlName="doctor_name" placeholder="Enter doctor name">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Last Review Date</mat-label>
+        <input matInput [matDatepicker]="reviewPicker" [max]="maxDate" formControlName="last_review_date" placeholder="Select date">
+        <mat-datepicker-toggle matSuffix [for]="reviewPicker"></mat-datepicker-toggle>
+        <mat-datepicker #reviewPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Follow-up -->
+    <div class="radio-group">
+      <label>Seeking follow-up?</label>
+      <mat-radio-group formControlName="seeking_followup">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- File Uploads -->
+    <div class="file-upload-section">
+      <h3>File Uploads</h3>
+      <div class="upload-fields">
+        <div class="file-input">
+          <label>Profile Image</label>
+          <input type="file" accept="image/*" (change)="onImageSelect($event)">
+        </div>
+        
+        <div class="file-input">
+          <label>Medical Reports</label>
+          <input type="file" accept=".pdf" (change)="onPdfSelect($event)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button mat-stroked-button type="button" (click)="goBack()" class="back-btn">Back</button>
+      <button mat-raised-button color="primary" type="button" (click)="makePayment()" [disabled]="isSubmitting">
+        {{isSubmitting ? 'Processing...' : 'Submit & Pay'}}
+      </button>
+    </div>
+  </form>
+
+  <!-- Bill Breakdown Modal -->
+  <div *ngIf="showBillBreakup" class="bill-overlay">
+    <div class="bill-modal">
+      <h3>Bill Breakdown</h3>
+      <div class="bill-item">
+        <span>Doctor Appointment Fee</span>
+        <span>₹500</span>
+      </div>
+      <div class="bill-item" *ngIf="patientForm.get('seeking_followup')?.value">
+        <span>Follow-up Discount (30%)</span>
+        <span style="color: green;">-₹{{getDiscount()}}</span>
+      </div>
+      <div class="bill-total">
+        <span><strong>Total Amount</strong></span>
+        <span><strong>₹{{getPaymentAmount()}}</strong></span>
+      </div>
+      <div class="bill-actions">
+        <button mat-stroked-button (click)="cancelPayment()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="proceedToPayment()">Proceed to Pay</button>
+      </div>
+    </div>
+  </div>
+</div>

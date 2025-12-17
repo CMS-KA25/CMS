@@ -83,7 +83,14 @@ namespace CMS.Api.Middleware
             }
 
             var json = JsonSerializer.Serialize(response, JsonOptions);
-            await context.Response.WriteAsync(json);
+            try
+            {
+                await context.Response.WriteAsync(json);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Response stream was already closed; nothing we can do here.
+            }
         }
     }
 }
