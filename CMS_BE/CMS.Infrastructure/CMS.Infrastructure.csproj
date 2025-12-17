@@ -6,6 +6,11 @@
     <ProjectReference Include="..\CMS.Data\CMS.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="Twilio" Version="5.79.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
