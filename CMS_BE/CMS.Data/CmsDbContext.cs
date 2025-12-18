@@ -6,14 +6,11 @@ using CMS.Data.Configurations.EMR;
 using CMS.Data.Configurations.Notifications;
 using CMS.Domain.Appointments.Entities;
 using CMS.Domain.Auth.Entities;
-<<<<<<< HEAD
 using CMS.Domain.Billing.Entities;
 using CMS.Domain.Clinic.Entities;
 using CMS.Domain.EMR.Entities;
 using CMS.Domain.Notifications.Entities;
-=======
 using CMS.Domain.NotificationModels;
->>>>>>> feature/auth-api
 using Microsoft.EntityFrameworkCore;
 
 namespace CMS.Data

@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿using CMS.Domain.Auth.Enums;
+using CMS.Domain.Auth.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,10 +6,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-=======
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using CMS.Domain.Auth.Enums;
->>>>>>> feature/auth-api
 
 namespace CMS.Domain.Auth.Entities
 {
@@ -20,7 +17,6 @@ namespace CMS.Domain.Auth.Entities
         public Guid UserID { get; set; }
         public string? GoogleID { get; set; }
         [Required]
-<<<<<<< HEAD
         public string Name { get; set; }
         [Required]
         [EmailAddress]
@@ -36,18 +32,6 @@ namespace CMS.Domain.Auth.Entities
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
-=======
-        [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
-        [Required]
-        [EmailAddress]
-        [MaxLength(100)]
-        public string Email { get; set; } = string.Empty;
-        [Required]
-        [Phone]
-        [MaxLength(20)]
-        public string PhoneNumber { get; set; } = string.Empty;
-        [Required]
         public string PasswordHash { get; set; } = string.Empty;
         [Url]
         public string? ProfilePictureURL { get; set; }
@@ -59,7 +43,6 @@ namespace CMS.Domain.Auth.Entities
 
         // Navigation properties
         public ICollection<User_Sessions> Sessions { get; set; } = new List<User_Sessions>();
->>>>>>> feature/auth-api
     }
 }
 
