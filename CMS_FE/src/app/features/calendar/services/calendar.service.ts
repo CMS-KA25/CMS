@@ -6,17 +6,9 @@ import { ApiResponse } from '../../../shared/models/auth.models';
 export interface Doctor {
     id: string;
     name: string;
-    email: string;
-    phoneNumber: string;
     specialization: string;
-    qualification: string;
     yearOfExperience: number;
-    profilePictureURL?: string;
-    startTime?: string;
-    endTime?: string;
-    slotDuration: number;
-    breakStartTime?: string;
-    breakEndTime?: string;
+    workingDays: number[];
 }
 
 export interface TimeSlot {
@@ -51,8 +43,8 @@ export class CalendarService {
     }
 
     // Get available time slots for a specific doctor on a specific date
-    getAvailableSlots(doctorId: string, date: string): Observable<ApiResponse<any>> {
-        return this.apiService.get<ApiResponse<any>>(`timeslots/available?DoctorId=${doctorId}&Date=${date}`);
+    getAvailableSlots(doctorId: string, date: string, userRole: number = 1): Observable<ApiResponse<any>> {
+        return this.apiService.get<ApiResponse<any>>(`timeslots/available?DoctorId=${doctorId}&Date=${date}&UserRole=${userRole}`);
     }
 
     // Book an appointment

@@ -12,6 +12,6 @@ namespace CMS.Application.Appointments.DTOs.Requests
         public DateTime Date { get; set; }
         
         [Required]
-        public UserRole UserRole { get; set; }
+        public RoleType UserRole { get; set; }
     }
 }

@@ -3,13 +3,11 @@ using CMS.Data.Configurations.Auth;
 using CMS.Data.Configurations.Billing;
 using CMS.Data.Configurations.Clinic;
 using CMS.Data.Configurations.EMR;
-using CMS.Data.Configurations.Notifications;
 using CMS.Domain.Appointments.Entities;
 using CMS.Domain.Auth.Entities;
 using CMS.Domain.Billing.Entities;
 using CMS.Domain.Clinic.Entities;
 using CMS.Domain.EMR.Entities;
-using CMS.Domain.Notifications.Entities;
 using CMS.Domain.NotificationModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,8 +32,6 @@ namespace CMS.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
-        public DbSet<User_Sessions> UserSessions { get; set; }
-        public DbSet<Token> Tokens { get; set; }
         public DbSet<VerificationCode> VerificationCodes { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
         // Notification entities
@@ -55,6 +51,8 @@ namespace CMS.Data
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new TokenConfiguration());
             modelBuilder.ApplyConfiguration(new UserSessionConfiguration());
+            modelBuilder.ApplyConfiguration(new VerificationCodeConfiguration());
+            modelBuilder.ApplyConfiguration(new InvitationConfiguration());
             modelBuilder.ApplyConfiguration(new AuditLogConfiguration());
             modelBuilder.ApplyConfiguration(new DoctorConfiguration());
             modelBuilder.ApplyConfiguration(new LeaveConfiguration());
@@ -69,17 +67,6 @@ namespace CMS.Data
             modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
             modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
             modelBuilder.ApplyConfiguration(new TimeSlotConfiguration());
-            modelBuilder.ApplyConfiguration(new AuthConfiguration());
-            modelBuilder.ApplyConfiguration(new UserSessionConfiguration());
-            modelBuilder.ApplyConfiguration(new TokenConfiguration());
-            modelBuilder.ApplyConfiguration(new VerificationCodeConfiguration());
-            modelBuilder.ApplyConfiguration(new InvitationConfiguration());
-            // modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
-            // modelBuilder.ApplyConfiguration(new BillingConfiguration());
-            // modelBuilder.ApplyConfiguration(new CalendarConfiguration());
-            // modelBuilder.ApplyConfiguration(new ClinicConfiguration());
-            // modelBuilder.ApplyConfiguration(new EMRConfiguration());
-            // Notification entity configurations (copied from NotificationContext)
 
             // Notification configuration
             modelBuilder.Entity<Notification>(entity =>
@@ -98,13 +85,13 @@ namespace CMS.Data
                     )
                     .Metadata.SetValueComparer(
                         new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<Dictionary<string, object>?>(
-                            (c1, c2) => (c1 == null && c2 == null) || (c1 != null && c2 != null && 
-                                System.Text.Json.JsonSerializer.Serialize(c1, options) == 
+                            (c1, c2) => (c1 == null && c2 == null) || (c1 != null && c2 != null &&
+                                System.Text.Json.JsonSerializer.Serialize(c1, options) ==
                                 System.Text.Json.JsonSerializer.Serialize(c2, options)),
                             c => c == null ? 0 : System.Text.Json.JsonSerializer.Serialize(c, options).GetHashCode(),
-                            c => c == null ? null : 
+                            c => c == null ? null :
                                 System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(
-                                    System.Text.Json.JsonSerializer.Serialize(c, options), 
+                                    System.Text.Json.JsonSerializer.Serialize(c, options),
                                     options)
                         ));
                 entity.HasIndex(e => e.RecipientId);
@@ -146,13 +133,13 @@ namespace CMS.Data
                     )
                     .Metadata.SetValueComparer(
                         new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<Dictionary<string, object>?>(
-                            (c1, c2) => (c1 == null && c2 == null) || (c1 != null && c2 != null && 
-                                System.Text.Json.JsonSerializer.Serialize(c1, options2) == 
+                            (c1, c2) => (c1 == null && c2 == null) || (c1 != null && c2 != null &&
+                                System.Text.Json.JsonSerializer.Serialize(c1, options2) ==
                                 System.Text.Json.JsonSerializer.Serialize(c2, options2)),
                             c => c == null ? 0 : System.Text.Json.JsonSerializer.Serialize(c, options2).GetHashCode(),
-                            c => c == null ? null : 
+                            c => c == null ? null :
                                 System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(
-                                    System.Text.Json.JsonSerializer.Serialize(c, options2), 
+                                    System.Text.Json.JsonSerializer.Serialize(c, options2),
                                     options2)
                         ));
                 entity.HasIndex(e => e.NotificationId);

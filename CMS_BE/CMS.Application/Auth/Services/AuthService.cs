@@ -18,6 +18,9 @@ namespace CMS.Application.Auth.Services
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
         private readonly ILogger<AuthService> _logger;
+        private readonly ICloudinaryService _cloudinaryService;
+        private readonly IAuditService _auditService;
+        private readonly IUserSessionService _sessionService;
 
         public AuthService(
             IUserRepository userRepository,
@@ -26,7 +29,10 @@ namespace CMS.Application.Auth.Services
             ILogger<AuthService> logger,
             IEmailService emailService,
             IVerificationCodeRepository verificationCodeRepository,
-            IInvitationRepository invitationRepository)
+            IInvitationRepository invitationRepository,
+            ICloudinaryService cloudinaryService,
+            IAuditService auditService,
+            IUserSessionService sessionService)
         {
             _userRepository = userRepository;
             _jwtService = jwtService;
@@ -35,6 +41,9 @@ namespace CMS.Application.Auth.Services
             _emailService = emailService;
             _verificationCodeRepository = verificationCodeRepository;
             _invitationRepository = invitationRepository;
+            _cloudinaryService = cloudinaryService;
+            _auditService = auditService;
+            _sessionService = sessionService;
         }
 
         public async Task<SignUpResponse> SignUpAsync(SignUpRequest request)
@@ -51,12 +60,34 @@ namespace CMS.Application.Auth.Services
 
                 // Update existing inactive user with newest details and reset password
                 existingUser.Name = request.Name;
-                existingUser.PhoneNumber = request.PhoneNumber;
+                if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+                {
+                    if (!long.TryParse(request.PhoneNumber, out var parsedPhone))
+                    {
+                        throw new ValidationException("Invalid phone number format.");
+                    }
+                    existingUser.PhoneNumber = parsedPhone;
+                }
                 existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
                 existingUser.Role = RoleType.User;
                 existingUser.IsActive = false;
 
                 createdUser = await _userRepository.UpdateAsync(existingUser);
+
+                // Handle profile image upload if provided
+                if (request.ProfileImage != null)
+                {
+                    try
+                    {
+                        var (imageUrl, publicId) = await _cloudinaryService.UploadProfileImg(request.ProfileImage, createdUser.UserID.ToString());
+                        createdUser.ProfilePictureURL = imageUrl;
+                        createdUser = await _userRepository.UpdateAsync(createdUser);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Profile image upload failed for user {UserId}, continuing without image", createdUser.UserID);
+                    }
+                }
             }
             else
             {
@@ -72,6 +103,21 @@ namespace CMS.Application.Auth.Services
                 // Create user as inactive until OTP verification
                 user.IsActive = false;
                 createdUser = await _userRepository.CreateAsync(user);
+
+                // Handle profile image upload if provided
+                if (request.ProfileImage != null)
+                {
+                    try
+                    {
+                        var (imageUrl, publicId) = await _cloudinaryService.UploadProfileImg(request.ProfileImage, createdUser.UserID.ToString());
+                        createdUser.ProfilePictureURL = imageUrl;
+                        createdUser = await _userRepository.UpdateAsync(createdUser);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Profile image upload failed for user {UserId}, continuing without image", createdUser.UserID);
+                    }
+                }
             }
 
             // Generate OTP and send via email
@@ -96,7 +142,8 @@ namespace CMS.Application.Auth.Services
             return new SignUpResponse
             {
                 Message = "User registered. Check your email for the verification code.",
-                User = _mapper.Map<UserResponse>(createdUser)
+                User = _mapper.Map<UserResponse>(createdUser),
+                ProfileImageUrl = createdUser.ProfilePictureURL
             };
         }
 
@@ -205,6 +252,11 @@ namespace CMS.Application.Auth.Services
             );
 
             _logger.LogInformation("User logged in: {Email}, Role: {Role}", user.Email, user.Role);
+            
+            // Create session and audit log
+            await _sessionService.CreateSessionAsync(user.UserID, accessToken, 
+                System.Net.IPAddress.Loopback.ToString()); // Will be replaced by middleware
+            await _auditService.LogAsync(user.UserID, "LOGIN", "Users");
 
             return new LoginResponse
             {
@@ -327,14 +379,14 @@ namespace CMS.Application.Auth.Services
                 await _emailService.SendEmailAsync(createdUser.Email, "You're invited to CMS", $"You were invited as {request.Role}. Accept: {inviteLink}", $"<p>You were invited as {request.Role}.</p><p><a href=\"{inviteLink}\">Accept invitation</a></p>");
             }
 
-            _logger.LogInformation("User invited by admin {AdminEmail}: {Email}, Role: {Role}", 
+            _logger.LogInformation("User invited by admin {AdminEmail}: {Email}, Role: {Role}",
                 adminUser.Email, createdUser.Email, createdUser.Role);
 
             return new InviteUserResponse
             {
                 Message = $"User invited successfully. An invitation email has been sent to {createdUser.Email}.",
                 User = _mapper.Map<UserResponse>(createdUser),
-                InvitationLink = $"http://localhost:4200/auth/accept-invite?token={("(token-generated-in-email)") }"
+                InvitationLink = $"http://localhost:4200/auth/accept-invite?token={("(token-generated-in-email)")}"
             };
         }
 
@@ -357,7 +409,7 @@ namespace CMS.Application.Auth.Services
                 {
                     Email = email,
                     Name = email.Split('@')[0],
-                    PhoneNumber = "0000000000",
+                    PhoneNumber = 0000000000,
                     Role = role ?? RoleType.Staff,
                     IsActive = false
                 };

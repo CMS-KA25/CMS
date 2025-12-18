@@ -19,6 +19,8 @@ using CMS.Application.Auth.Services;
 using CMS.Application.Auth.DTOs.Mapping;
 using CMS.Infrastructure.Auth.Repositories;
 using CMS.Infrastructure.Auth.Services;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using DotNetEnv;
 
 // Load .env so environment variables are available for configuration
@@ -37,6 +39,17 @@ builder.Host.UseSerilog();
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string is required. Set CONNECTION_STRING environment variable or ConnectionStrings:DefaultConnection in appsettings.json");
+
+// Cloudinary configuration
+var cloudinaryCloudName = Environment.GetEnvironmentVariable("Cloudinary__CloudName")
+    ?? builder.Configuration["Cloudinary:CloudName"]
+    ?? throw new InvalidOperationException("Cloudinary CloudName is required");
+var cloudinaryApiKey = Environment.GetEnvironmentVariable("Cloudinary__ApiKey")
+    ?? builder.Configuration["Cloudinary:ApiKey"]
+    ?? throw new InvalidOperationException("Cloudinary ApiKey is required");
+var cloudinaryApiSecret = Environment.GetEnvironmentVariable("Cloudinary__ApiSecret")
+    ?? builder.Configuration["Cloudinary:ApiSecret"]
+    ?? throw new InvalidOperationException("Cloudinary ApiSecret is required");
 
 // Log effective configuration for local debugging
 Console.WriteLine($"[Startup] Effective ConnectionString: {connectionString}");
@@ -105,12 +118,22 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEmailService, CMS.Infrastructure.Auth.Services.SendGridEmailService>();
 builder.Services.AddScoped<IVerificationCodeRepository, CMS.Infrastructure.Auth.Repositories.VerificationCodeRepository>();
 builder.Services.AddScoped<IInvitationRepository, CMS.Infrastructure.Auth.Repositories.InvitationRepository>();
+builder.Services.AddScoped<CMS.Application.Clinic.Interfaces.IDoctorRepository, CMS.Infrastructure.Clinic.Repositories.DoctorRepository>();
+builder.Services.AddScoped<CMS.Application.Clinic.Interfaces.ILeaveRepository, CMS.Infrastructure.Clinic.Repositories.LeaveRepository>();
+builder.Services.AddScoped<CMS.Application.Appointments.Interfaces.ITimeSlotRepository, CMS.Infrastructure.Appointments.Repositories.TimeSlotRepository>();
 
 // Register Services
 builder.Services.AddScoped<IJwtService, CMS.Infrastructure.Auth.Services.JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuditService, CMS.Infrastructure.Auth.Services.AuditService>();
+builder.Services.AddScoped<IUserSessionService, CMS.Infrastructure.Auth.Services.UserSessionService>();
+builder.Services.AddScoped<CMS.Application.Appointments.Interfaces.ITimeSlotService, CMS.Application.Appointments.Services.TimeSlotService>();
+builder.Services.AddScoped<CMS.Application.Clinic.Interfaces.IDoctorService, CMS.Application.Clinic.Services.DoctorService>();
 
-// All entities now use the single CmsDbContext
+// Cloudinary
+var cloudinaryAccount = new Account(cloudinaryCloudName, cloudinaryApiKey, cloudinaryApiSecret);
+builder.Services.AddSingleton(new Cloudinary(cloudinaryAccount));
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // Configure SendGrid from environment variables
 builder.Services.Configure<SendGridConfig>(options =>
@@ -154,7 +177,7 @@ builder.Services.AddScoped<ITemplateNotificationService>(sp =>
     var emailService = sp.GetRequiredService<CMS.Infrastructure.Notifications.NotificationServices.SendGridEmailService>();
     var smsService = sp.GetRequiredService<CMS.Infrastructure.Notifications.NotificationServices.TwilioSmsService>();
     var logger = sp.GetRequiredService<ILogger<CMS.Infrastructure.Notifications.NotificationServices.NotificationService>>();
-    
+
     return new CMS.Infrastructure.Notifications.NotificationServices.NotificationService(
         templateService, emailService, smsService, logger);
 });
@@ -168,6 +191,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 // Services
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -211,7 +235,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // Config CORS - Read from appsettings.json or use defaults
 var corsSettings = builder.Configuration.GetSection("CorsSettings");
-var allowedOrigins = corsSettings.GetSection("AllowedOrigins").Get<string[]>() 
+var allowedOrigins = corsSettings.GetSection("AllowedOrigins").Get<string[]>()
     ?? new[] { "http://localhost:4200", "http://localhost:3000" };
 
 builder.Services.AddCors(options =>

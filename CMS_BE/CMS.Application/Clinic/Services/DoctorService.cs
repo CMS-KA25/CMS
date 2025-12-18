@@ -28,7 +28,8 @@ namespace CMS.Application.Clinic.Services
                 Id = d.DoctorID,
                 Name = d.Name,
                 Specialization = d.Specialization,
-                YearOfExperience = d.YearOfExperience
+                YearOfExperience = d.YearOfExperience,
+                WorkingDays = d.WorkingDays
             }).ToList();
 
             _logger.LogInformation("Found {Count} active doctors", doctorDtos.Count);

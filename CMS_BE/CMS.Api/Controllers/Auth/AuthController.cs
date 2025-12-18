@@ -269,8 +269,9 @@ namespace CMS.Api.Controllers.Auth
         }
 
         [HttpPost("signup")]
+        [Consumes("multipart/form-data")]
         [AllowAnonymous]
-        public async Task<ActionResult<ApiResponse<SignUpResponse>>> SignUp([FromBody] SignUpRequest request)
+        public async Task<ActionResult<ApiResponse<SignUpResponse>>> SignUp([FromForm] SignUpRequest request)
         {
             try
             {

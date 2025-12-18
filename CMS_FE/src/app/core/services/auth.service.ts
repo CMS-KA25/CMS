@@ -28,7 +28,8 @@ export class AuthService {
     return this.apiService.post<ApiResponse<LoginResponse>>('auth/login', credentials)
       .pipe(
         tap(response => {
-          if (response.success) {
+          console.log('AuthService login response:', response);
+          if (response.success && response.data) {
             this.setCurrentUser(response.data.user);
             localStorage.setItem('accessToken', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
@@ -44,9 +45,20 @@ export class AuthService {
 
   signUp(userData: SignUpRequest): Observable<ApiResponse<any>> {
     this.apiService.setLoading(true);
-    // Log payload to help debug client-side payload shape
     console.log('AuthService.signUp payload:', userData);
-    return this.apiService.post<ApiResponse<any>>('auth/signup', userData)
+    
+    const formData = new FormData();
+    formData.append('name', userData.name);
+    formData.append('email', userData.email);
+    formData.append('password', userData.password);
+    if (userData.phoneNumber) {
+      formData.append('phoneNumber', userData.phoneNumber);
+    }
+    if (userData.profileImage) {
+      formData.append('profileImage', userData.profileImage);
+    }
+    
+    return this.apiService.postForm<ApiResponse<any>>('auth/signup', formData)
       .pipe(
         tap(() => this.apiService.setLoading(false)),
         catchError(error => {

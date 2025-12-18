@@ -1,0 +1,231 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport mode="side" opened>
+    <div class="sidebar-header">
+      <mat-icon color="primary">medical_services</mat-icon>
+      <span>Patient Portal</span>
+    </div>
+    
+    <mat-nav-list>
+      <a mat-list-item (click)="setActiveSection('book-appointment')" [class.active]="activeSection === 'book-appointment'">
+        <mat-icon matListItemIcon>event</mat-icon>
+        <span matListItemTitle>Book Appointment</span>
+      </a>
+      <a mat-list-item (click)="setActiveSection('upcoming')" [class.active]="activeSection === 'upcoming'">
+        <mat-icon matListItemIcon>schedule</mat-icon>
+        <span matListItemTitle>My Appointments</span>
+      </a>
+      <a mat-list-item (click)="setActiveSection('check-in')" [class.active]="activeSection === 'check-in'">
+        <mat-icon matListItemIcon>login</mat-icon>
+        <span matListItemTitle>Check-in</span>
+      </a>
+      <a mat-list-item (click)="setActiveSection('health-records')" [class.active]="activeSection === 'health-records'">
+        <mat-icon matListItemIcon>folder_shared</mat-icon>
+        <span matListItemTitle>Health Records</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="sidebar-footer">
+      <mat-divider></mat-divider>
+      <button mat-button (click)="openProfile()" class="profile-btn">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+      <button mat-button (click)="logout()" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="main-content">
+      <div [ngSwitch]="activeSection">
+        
+        <!-- Book Appointment Section -->
+        <div *ngSwitchCase="'book-appointment'">
+          <h1 class="page-title">Book an Appointment</h1>
+          
+          <div class="booking-layout">
+            <!-- Selection Card -->
+            <mat-card class="booking-card">
+              <div class="form-group">
+                <label>1. Select Specialization</label>
+                <mat-form-field appearance="outline" class="full-width-field">
+                  <mat-label>Choose category</mat-label>
+                  <mat-select 
+                    [(value)]="selectedSpecialization" 
+                    (selectionChange)="onSpecializationChange($event.value)"
+                  >
+                    <mat-option [value]="''">All Specialties</mat-option>
+                    <mat-option *ngFor="let spec of specializations" [value]="spec">
+                      {{ spec }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="form-group">
+                <label>2. Select Specialist</label>
+                <app-doctor-selector
+                  [doctors]="filteredDoctors"
+                  [selectedDrId]="selectedDoctor?.id || ''"
+                  (doctorChange)="onDoctorChange($event)"
+                >
+                </app-doctor-selector>
+              </div>
+
+              <div class="form-group">
+                <label>3. Select Date</label>
+                <app-base-cal 
+                  [workingDays]="selectedDoctor?.workingDays || []"
+                  [userRole]="currentUser?.role || 1"
+                  (selectedChange)="onDateChange($event)">
+                </app-base-cal>
+              </div>
+            </mat-card>
+
+            <!-- Slots Card -->
+            <mat-card class="booking-card slots-card">
+              <label>4. Available Time Slots</label>
+              
+              <div class="slots-container">
+                <div *ngIf="loadingSlots" class="loading-overlay">
+                  <mat-icon class="spin">sync</mat-icon>
+                  <span>Finding slots...</span>
+                </div>
+
+                <div *ngIf="!loadingSlots && timeSlots.length === 0" class="empty-slots">
+                  <mat-icon>info</mat-icon>
+                  <p>Select a doctor and date to check availability.</p>
+                </div>
+
+                <app-timeslot-button
+                  *ngIf="!loadingSlots && timeSlots.length > 0"
+                  [slots]="timeSlots"
+                  [selectedSlot]="selectedTimeSlot"
+                  (slotChange)="onTimeSlotChange($event)"
+                >
+                </app-timeslot-button>
+              </div>
+
+              <div class="booking-action" *ngIf="isFormValid()">
+                <button mat-raised-button color="primary" class="confirm-btn" (click)="onProceed()">
+                  Confirm Selection
+                </button>
+                <p class="summary">
+                  {{ selectedDoctor?.name }} on {{ selectedDate | date:'fullDate' }}
+                </p>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <div *ngSwitchCase="'upcoming'">
+          <h1 class="page-title">My Appointments</h1>
+          <mat-card class="info-card">
+            <mat-card-content>
+              <p>No upcoming appointments found. Start by booking one!</p>
+              <button mat-stroked-button color="primary" (click)="setActiveSection('book-appointment')">
+                Book Now
+              </button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Check-in -->
+        <div *ngSwitchCase="'check-in'">
+          <h1 class="page-title">Check-in</h1>
+          <mat-card class="info-card">
+            <mat-card-content>
+              <p>Check-in for your today's appointments.</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Health Records -->
+        <div *ngSwitchCase="'health-records'">
+          <h1 class="page-title">Health Records</h1>
+          <mat-card class="info-card">
+            <mat-card-content>
+              <p>Access your medical history and lab results here.</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div *ngSwitchDefault>
+          <div class="welcome-section">
+            <h1>Hello, {{ currentUser?.name }}</h1>
+            <p>Welcome to your personal health portal. How can we help you today?</p>
+            
+            <div class="quick-actions">
+              <mat-card class="action-card" (click)="setActiveSection('book-appointment')">
+                <mat-icon color="primary">event</mat-icon>
+                <h3>Book Appointment</h3>
+                <p>Schedule a visit with a specialist.</p>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Profile Dialog -->
+<div class="profile-overlay" *ngIf="showProfileDialog" (click)="closeProfile()">
+  <div class="profile-dialog" (click)="$event.stopPropagation()">
+    <div class="profile-header">
+      <h2>User Profile</h2>
+      <button mat-icon-button (click)="closeProfile()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="profile-content">
+      <div class="profile-avatar">
+        <img *ngIf="currentUser?.profilePictureURL" 
+             [src]="currentUser.profilePictureURL" 
+             alt="Profile Picture" 
+             class="profile-image">
+        <mat-icon *ngIf="!currentUser?.profilePictureURL" class="avatar-icon">account_circle</mat-icon>
+      </div>
+      
+      <div class="profile-details">
+        <div class="detail-row">
+          <span class="label">Name:</span>
+          <span class="value">{{ currentUser?.name }}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="label">Email:</span>
+          <span class="value">{{ currentUser?.email }}</span>
+        </div>
+        
+        <div class="detail-row" *ngIf="currentUser?.phoneNumber">
+          <span class="label">Phone:</span>
+          <span class="value">{{ currentUser?.phoneNumber }}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="label">Role:</span>
+          <span class="value">{{ getRoleName(currentUser?.role) }}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="label">Email Verified:</span>
+          <span class="value" [class.verified]="currentUser?.isEmailVerified" [class.unverified]="!currentUser?.isEmailVerified">
+            {{ currentUser?.isEmailVerified ? 'Yes' : 'No' }}
+          </span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="label">Member Since:</span>
+          <span class="value">{{ currentUser?.createdAt | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

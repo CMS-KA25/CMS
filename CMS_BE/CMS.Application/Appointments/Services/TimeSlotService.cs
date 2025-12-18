@@ -101,10 +101,10 @@ namespace CMS.Application.Appointments.Services
             return response;
         }
 
-        public async Task<bool> ValidateBookingWindowAsync(DateTime date, UserRole role)
+        public async Task<bool> ValidateBookingWindowAsync(DateTime date, RoleType role)
         {
             var today = DateTime.Today;
-            var maxDaysAhead = role == UserRole.Patient ? 30 : 90; // Patients: 30 days, Staff: 90 days
+            var maxDaysAhead = role == RoleType.User ? 30 : 90; // Users: 30 days, Staff/Doctors: 90 days
             
             return date.Date >= today && date.Date <= today.AddDays(maxDaysAhead);
         }

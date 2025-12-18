@@ -20,20 +20,26 @@ namespace CMS.Data.Seeders
 
             // Get admin settings from configuration
             var adminSection = configuration.GetSection("AdminSettings");
-            
+
             // Override with environment variables if they exist, otherwise use appsettings.json, otherwise use defaults
-            var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") 
-                ?? adminSection["Email"] 
+            var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL")
+                ?? adminSection["Email"]
                 ?? "admin@cms.com";
-            var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") 
-                ?? adminSection["Password"] 
+            var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD")
+                ?? adminSection["Password"]
                 ?? "Admin@123";
-            var adminName = Environment.GetEnvironmentVariable("ADMIN_NAME") 
-                ?? adminSection["Name"] 
+            var adminName = Environment.GetEnvironmentVariable("ADMIN_NAME")
+                ?? adminSection["Name"]
                 ?? "System Administrator";
-            var adminPhone = Environment.GetEnvironmentVariable("ADMIN_PHONE") 
-                ?? adminSection["Phone"] 
+            var adminPhoneStr = Environment.GetEnvironmentVariable("ADMIN_PHONE")
+                ?? adminSection["Phone"]
                 ?? "1234567890";
+
+            if (!long.TryParse(adminPhoneStr, out var adminPhone))
+            {
+                // Fallback to default numeric if parsing fails
+                adminPhone = 1234567890L;
+            }
 
             // Hash the password
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(adminPassword);

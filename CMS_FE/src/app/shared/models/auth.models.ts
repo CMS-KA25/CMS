@@ -3,7 +3,8 @@ export interface User {
   email: string;
   name: string;
   phoneNumber?: string;
-  role: RoleType;
+  profilePictureURL?: string;
+  role: RoleType | number;
   isEmailVerified: boolean;
   createdAt: string;
 }
@@ -26,6 +27,7 @@ export interface SignUpRequest {
   password: string;
   name: string;
   phoneNumber?: string;
+  profileImage?: File;
 }
 
 export interface InviteUserRequest {

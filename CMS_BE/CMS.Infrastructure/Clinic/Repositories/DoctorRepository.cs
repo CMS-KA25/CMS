@@ -31,7 +31,7 @@ namespace CMS.Infrastructure.Clinic.Repositories
         public async Task<List<Doctor>> GetAllActiveDoctorsAsync()
         {
             var activeDoctorIds = await _context.Users
-                .Where(u => u.Role == Domain.Auth.Enums.UserRole.Doctor && u.IsActive && !u.IsDeleted)
+                .Where(u => u.Role == Domain.Auth.Enums.RoleType.Doctor && u.IsActive && !u.IsDeleted)
                 .Select(u => u.UserID)
                 .ToListAsync();
 
@@ -44,15 +44,16 @@ namespace CMS.Infrastructure.Clinic.Repositories
         {
             return await (from d in _context.Doctors
                           join u in _context.Users on d.DoctorID equals u.UserID
-                          where u.Role == Domain.Auth.Enums.UserRole.Doctor 
-                             && u.IsActive 
+                          where u.Role == Domain.Auth.Enums.RoleType.Doctor
+                             && u.IsActive
                              && !u.IsDeleted
                           select new DoctorWithUserDto
                           {
                               DoctorID = d.DoctorID,
                               Name = u.Name,
                               Specialization = d.Specialization,
-                              YearOfExperience = d.YearOfExperience
+                              YearOfExperience = d.YearOfExperience,
+                              WorkingDays = d.WorkingDays
                           }).ToListAsync();
         }
     }

@@ -5,7 +5,8 @@ namespace CMS.Domain.Auth.Enums
         User = 1,
         Staff = 2,
         Doctor = 3,
-        Admin = 4
+        Admin = 4,
+        Patient = 5
     }
 }
 

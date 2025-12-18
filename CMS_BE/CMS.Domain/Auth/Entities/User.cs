@@ -6,8 +6,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using CMS.Domain.Auth.Enums;
 
 namespace CMS.Domain.Auth.Entities
 {
@@ -23,11 +21,6 @@ namespace CMS.Domain.Auth.Entities
         public string Email { get; set; }
         [Phone]
         public long PhoneNumber { get; set; }
-        public string PasswordHash { get; set; }
-        [Url]
-        public string? ProfilePictureURL { get; set; }
-        public UserRole Role { get; set; }
-        public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
@@ -38,11 +31,9 @@ namespace CMS.Domain.Auth.Entities
         [Required]
         public RoleType Role { get; set; } = RoleType.User;
         public bool IsActive { get; set; } = true;
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
 
         // Navigation properties
-        public ICollection<User_Sessions> Sessions { get; set; } = new List<User_Sessions>();
+        public ICollection<UserSession> Sessions { get; set; } = new List<UserSession>();
     }
 }
 

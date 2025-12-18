@@ -81,6 +81,18 @@ import { AuthService } from '../../../../core/services/auth.service';
               </mat-error>
             </mat-form-field>
 
+            <div class="profile-image-section full-width">
+              <label class="profile-image-label">Profile Image (Optional)</label>
+              <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="file-input">
+              <button type="button" mat-stroked-button (click)="fileInput.click()" class="file-select-btn">
+                Choose Image
+              </button>
+              <div *ngIf="selectedFileName" class="selected-file">{{ selectedFileName }}</div>
+              <div *ngIf="imagePreview" class="image-preview">
+                <img [src]="imagePreview" alt="Profile preview">
+              </div>
+            </div>
+
             <div class="error-message" *ngIf="errorMessage">
               {{ errorMessage }}
             </div>
@@ -148,6 +160,44 @@ import { AuthService } from '../../../../core/services/auth.service';
       text-decoration: none;
       color: var(--accent-color);
     }
+    
+    .profile-image-section {
+      margin-bottom: 1rem;
+    }
+    
+    .profile-image-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.6);
+    }
+    
+    .file-input {
+      display: none;
+    }
+    
+    .file-select-btn {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    
+    .selected-file {
+      font-size: 0.875rem;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 0.5rem;
+    }
+    
+    .image-preview {
+      text-align: center;
+    }
+    
+    .image-preview img {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
+    }
   `]
 })
 export class SignupComponent {
@@ -156,6 +206,9 @@ export class SignupComponent {
   successMessage = '';
   errorDetails: any = null;
   loading$;
+  selectedFile: File | null = null;
+  selectedFileName = '';
+  imagePreview: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -171,12 +224,32 @@ export class SignupComponent {
     });
   }
 
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      
+      // Create image preview
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   onSubmit(): void {
     if (this.signupForm.valid) {
       this.errorMessage = '';
       this.successMessage = '';
       
-      this.authService.signUp(this.signupForm.value).subscribe({
+      const signupData = {
+        ...this.signupForm.value,
+        profileImage: this.selectedFile
+      };
+      
+      this.authService.signUp(signupData).subscribe({
         next: (response) => {
           if (response.success) {
             this.successMessage = 'Account created! Please check your email for verification code.';

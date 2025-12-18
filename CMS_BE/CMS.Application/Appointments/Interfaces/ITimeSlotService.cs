@@ -7,6 +7,6 @@ namespace CMS.Application.Appointments.Interfaces
     public interface ITimeSlotService
     {
         Task<AvailableSlotsResponseDto> GetAvailableSlotsAsync(GetAvailableSlotsRequestDto request);
-        Task<bool> ValidateBookingWindowAsync(DateTime date, UserRole role);
+        Task<bool> ValidateBookingWindowAsync(DateTime date, RoleType role);
     }
 }

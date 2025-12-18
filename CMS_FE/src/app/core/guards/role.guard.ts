@@ -4,13 +4,10 @@ import { AuthService } from '../services/auth.service';
 import { RoleType } from '../../shared/models/auth.models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoleGuard implements CanActivate {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const user = this.authService.getCurrentUser();
@@ -21,11 +18,28 @@ export class RoleGuard implements CanActivate {
       return false;
     }
 
-    if (requiredRoles && !requiredRoles.includes(user.role)) {
-      this.router.navigate(['/unauthorized']);
-      return false;
+    if (requiredRoles) {
+      const userRole =
+        typeof user.role === 'number'
+          ? this.mapNumericRole(user.role)
+          : user.role;
+      if (!requiredRoles.includes(userRole)) {
+        this.router.navigate(['/unauthorized']);
+        return false;
+      }
     }
 
     return true;
+  }
+
+  private mapNumericRole(role: number): RoleType {
+    switch (role) {
+      case 1: return RoleType.User;
+      case 2: return RoleType.Staff;
+      case 3: return RoleType.Doctor;
+      case 4: return RoleType.Admin;
+      case 5: return RoleType.Patient;
+      default: return RoleType.User;
+    }
   }
 }

@@ -137,14 +137,16 @@ export class LoginComponent {
       this.errorMessage = '';
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          if (response.success) {
+          console.log('Login response:', response);
+          if (response.success && response.data) {
+            console.log('User role:', response.data.user.role);
             this.redirectToDashboard(response.data.user.role);
           } else {
             this.errorMessage = response.message || 'Login failed';
           }
         },
         error: (error) => {
-          // ApiService now throws normalized error objects { status, message, error }
+          console.error('Login error:', error);
           this.errorDetails = error;
           this.errorMessage = error?.message || 'Login failed. Please check your credentials.';
         }
@@ -161,19 +163,16 @@ export class LoginComponent {
     });
   }
 
-  private redirectToDashboard(role: RoleType): void {
-    switch (role) {
-      case RoleType.Admin:
-        this.router.navigate(['/admin']);
-        break;
-      case RoleType.Doctor:
-        this.router.navigate(['/doctor']);
-        break;
-      case RoleType.Staff:
-        this.router.navigate(['/staff']);
-        break;
-      default:
-        this.router.navigate(['/patient']);
+  private redirectToDashboard(role: RoleType | number): void {
+    const roleNum = typeof role === 'number' ? role : role;
+    if (roleNum === 4 || role === RoleType.Admin) {
+      this.router.navigate(['/admin']);
+    } else if (roleNum === 3 || role === RoleType.Doctor) {
+      this.router.navigate(['/doctor']);
+    } else if (roleNum === 2 || role === RoleType.Staff) {
+      this.router.navigate(['/staff']);
+    } else {
+      this.router.navigate(['/patient']);
     }
   }
 }

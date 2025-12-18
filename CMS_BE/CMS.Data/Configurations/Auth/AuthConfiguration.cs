@@ -54,37 +54,24 @@ namespace CMS.Data.Configurations.Auth
         }
     }
 
-    public class UserSessionConfiguration : IEntityTypeConfiguration<User_Sessions>
+    public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
     {
-        public void Configure(EntityTypeBuilder<User_Sessions> builder)
+        public void Configure(EntityTypeBuilder<UserSession> builder)
         {
             builder.HasKey(s => s.SessionID);
-
-            builder.Property(s => s.SessionID)
-                .HasDefaultValueSql("NEWID()");
-
-            builder.Property(s => s.SessionToken)
-                .IsRequired();
-
-            builder.Property(s => s.DeviceInfo)
-                .HasMaxLength(500);
-
-            builder.Property(s => s.IPAddress)
-                .HasMaxLength(50);
-
-            builder.Property(s => s.UserAgent)
-                .HasMaxLength(500);
-
-            builder.Property(s => s.IsActive)
-                .HasDefaultValue(true);
-
-            // Explicitly map the relationship from the dependent side as well
-            builder.HasOne(s => s.User)
-                .WithMany(u => u.Sessions)
-                .HasForeignKey(s => s.UserID);
+            builder.Property(s => s.SessionToken).HasMaxLength(500).IsRequired();
+            builder.Property(s => s.IPAddress).HasMaxLength(45).IsRequired();
+            builder.Property(s => s.UserAgent).HasMaxLength(500);
+            builder.Property(s => s.LogoutReason).HasMaxLength(100);
             
-            // Apply verification code configuration if any
-            // (Added VerificationCodeConfiguration is registered in CmsDbContext)
+            builder.HasIndex(s => s.UserID);
+            builder.HasIndex(s => s.SessionToken).IsUnique();
+            builder.HasIndex(s => s.IsActive);
+            
+            builder.HasOne(s => s.User)
+                   .WithMany(u => u.Sessions)
+                   .HasForeignKey(s => s.UserID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 
@@ -101,6 +88,24 @@ namespace CMS.Data.Configurations.Auth
                 .IsRequired();
 
             builder.HasIndex(t => t.UserID);
+        }
+    }
+
+    public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
+    {
+        public void Configure(EntityTypeBuilder<AuditLog> builder)
+        {
+            builder.HasKey(a => a.AuditID);
+            
+            builder.Property(a => a.Action).HasMaxLength(50).IsRequired();
+            builder.Property(a => a.TableName).HasMaxLength(100).IsRequired();
+            builder.Property(a => a.ErrorMessage).HasMaxLength(1000);
+            builder.Property(a => a.CorrelationId).HasMaxLength(50);
+            builder.Property(a => a.IPAddress).HasMaxLength(45);
+            
+            builder.HasIndex(a => a.UserID);
+            builder.HasIndex(a => a.ActionTimestamp);
+            builder.HasIndex(a => a.TableName);
         }
     }
 }
