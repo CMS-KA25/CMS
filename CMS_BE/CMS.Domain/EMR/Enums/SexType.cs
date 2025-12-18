@@ -8,6 +8,6 @@ namespace CMS.Domain.EMR.Enums
 {
     public enum SexType
     {
-        male=1,female=2,other=3
+        Male=1,Female=2,Other=3
     }
 }

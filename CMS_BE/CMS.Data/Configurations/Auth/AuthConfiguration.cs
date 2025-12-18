@@ -1,11 +1,12 @@
-﻿using CMS.Domain.Auth.Entities;
+using CMS.Domain.Auth.Entities;
+
 using CMS.Domain.Auth.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CMS.Data.Configurations.Auth
 {
-    public class AuthConfiguration : IEntityTypeConfiguration<User>
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {

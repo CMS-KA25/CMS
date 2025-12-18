@@ -1,0 +1,57 @@
+<!-- book-appointment-page.component.html -->
+<div class="page-layout">
+  
+
+ 
+    <main class="main-content">
+      <div class="main-content-inner">
+        <h1 class="page-title">Book Appointment</h1>
+
+        <!-- Doctor Selection -->
+        <section class="section">
+          <h3 class="section-title">Choose Doctor</h3>
+          <div class="doctor-selector-container">
+            <app-doctor-selector
+              [doctors]="doctors"
+              [selectedDrId]="selectedDoctor?.id || ''"
+              (doctorChange)="onDoctorChange($event)"
+            >
+            </app-doctor-selector>
+          </div>
+        </section>
+
+        <!-- Date Selection -->
+        <section class="section">
+          <h3 class="section-title">Select Appointment Date</h3>
+          <div class="calendar-container">
+            <app-base-cal (selectedChange)="onDateChange($event)">
+            </app-base-cal>
+          </div>
+        </section>
+
+        <!-- Time Slot Selection -->
+        <section class="section">
+          <h3 class="section-title">Available Time Slots</h3>
+          <app-timeslot-button
+            [slots]="timeSlots"
+            [selectedSlot]="selectedTimeSlot"
+            (slotChange)="onTimeSlotChange($event)"
+          >
+          </app-timeslot-button>
+        </section>
+
+        <!-- Proceed Button -->
+        <div class="proceed-section">
+          <button
+            mat-raised-button
+            color="primary"
+            [disabled]="!isFormValid()"
+            (click)="onProceed()"
+          >
+            Proceed
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+

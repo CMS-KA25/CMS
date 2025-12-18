@@ -11,9 +11,8 @@ namespace CMS.Domain.EMR.Entities
 {
     public class MedicalReport
     {
-        public Guid ReportId { get; set; }
-        public Guid PatientId { get; set; }
-        public Guid EncounterId { get; set; }
+        public Guid ReportID { get; set; }
+        public Guid EncounterID { get; set; }
         public string FileUrl { get; set; }
         [Required]
         public ReportType ReportType { get; set; }
@@ -22,6 +21,9 @@ namespace CMS.Domain.EMR.Entities
         public Guid UploadedBy { get; set; }
         [Required]
         public DateTime DateUploaded { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
 
         //public Patient Patient { get; set; }

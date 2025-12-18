@@ -5,6 +5,7 @@ using CMS.Application.Shared.DTOs;
 using System.Linq;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -21,6 +22,12 @@ namespace CMS.Api.Controllers.Auth
         {
             _authService = authService;
             _logger = logger;
+        }
+
+        public class BulkInviteForm
+        {
+            public IFormFile File { get; set; }
+            public CMS.Domain.Auth.Enums.RoleType Role { get; set; }
         }
 
         [HttpPost("resend-signup-otp")]
@@ -56,8 +63,9 @@ namespace CMS.Api.Controllers.Auth
         }
 
         [HttpPost("bulk-invite")]
+        [Consumes("multipart/form-data")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApiResponse<object>>> BulkInvite([FromForm] IFormFile file, [FromForm] CMS.Domain.Auth.Enums.RoleType role)
+        public async Task<ActionResult<ApiResponse<object>>> BulkInvite([FromForm] BulkInviteForm form)
         {
             // Parse uploaded file (CSV or XLSX) to extract emails and invite each
             try
@@ -68,13 +76,13 @@ namespace CMS.Api.Controllers.Auth
                     return Unauthorized(ApiResponse<object>.ErrorResponse("Invalid user token"));
                 }
 
-                if (file == null || file.Length == 0) return BadRequest(ApiResponse<object>.ErrorResponse("File is required"));
+                if (form?.File == null || form.File.Length == 0) return BadRequest(ApiResponse<object>.ErrorResponse("File is required"));
 
                 var emails = new System.Collections.Generic.List<string>();
-                var fileExt = System.IO.Path.GetExtension(file.FileName).ToLowerInvariant();
+                var fileExt = System.IO.Path.GetExtension(form.File.FileName).ToLowerInvariant();
                 using (var ms = new System.IO.MemoryStream())
                 {
-                    await file.CopyToAsync(ms);
+                    await form.File.CopyToAsync(ms);
                     ms.Position = 0;
 
                     if (fileExt == ".csv" || fileExt == ".txt")
@@ -136,7 +144,7 @@ namespace CMS.Api.Controllers.Auth
                             Email = email,
                             Name = string.IsNullOrWhiteSpace(fallbackName) ? "Invited" : fallbackName,
                             PhoneNumber = "0000000000",
-                            Role = role
+                            Role = form.Role
                         };
                         var inviteResult = await _authService.InviteUserAsync(inviteReq, adminUserId);
                         if (inviteResult != null && !string.IsNullOrEmpty(inviteResult.Message) && inviteResult.Message.StartsWith("Invitation already sent"))

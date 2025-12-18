@@ -23,8 +23,11 @@ export const routes: Routes = [
       {
         path: 'verify-otp',
         loadComponent: () => import('./features/auth/pages/verify-otp/verify-otp.component').then(m => m.VerifyOtpComponent)
-      }
-      ,
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () => import('./features/auth/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+      },
       {
         path: 'accept-invite',
         loadComponent: () => import('./features/admin/accept-invitation.component').then(m => m.AcceptInvitationComponent)
@@ -34,7 +37,7 @@ export const routes: Routes = [
   {
     path: 'patient',
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: [RoleType.User] },
+    data: { roles: [RoleType.User, RoleType.Patient] },
     loadComponent: () => import('./features/patient/patient-dashboard.component').then(m => m.PatientDashboardComponent)
   },
   {
@@ -54,5 +57,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: [RoleType.Admin] },
     loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent)
+  },
+  {
+    path: 'unauthorized',
+    loadComponent: () => import('./shared/components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
   }
 ];

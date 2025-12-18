@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../core/services/auth.service';
+import { RoleType } from '../../shared/models/auth.models';
 
 @Component({
   selector: 'invite-user',
@@ -32,8 +33,8 @@ import { AuthService } from '../../core/services/auth.service';
       <mat-form-field class="full-width">
         <mat-label>Role</mat-label>
         <mat-select formControlName="role">
-          <mat-option [value]="2">Staff</mat-option>
-          <mat-option [value]="3">Doctor</mat-option>
+          <mat-option [value]="RoleType.Staff">Staff</mat-option>
+          <mat-option [value]="RoleType.Doctor">Doctor</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -47,6 +48,7 @@ import { AuthService } from '../../core/services/auth.service';
   styles: ['.full-width { width: 100%; margin-bottom: 8px; }']
 })
 export class InviteUserComponent {
+  RoleType = RoleType;
   form: any;
   loading = false;
   success = '';
@@ -57,7 +59,7 @@ export class InviteUserComponent {
       email: ['', [Validators.required, Validators.email]],
       name: ['', [Validators.required, Validators.minLength(2)]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^[+]?[0-9]{7,20}$/)]],
-      role: [2, Validators.required]
+      role: [RoleType.Staff, Validators.required]
     });
   }
 
@@ -70,14 +72,14 @@ export class InviteUserComponent {
       email: String(this.form.get('email')?.value ?? ''),
       name: String(this.form.get('name')?.value ?? ''),
       phoneNumber: String(this.form.get('phoneNumber')?.value ?? ''),
-      role: Number(this.form.get('role')?.value ?? 2)
+      role: this.form.get('role')?.value
     };
 
     this.auth.inviteUser(payload).subscribe({
       next: (res) => {
         this.loading = false;
         this.success = res.message || 'Invitation sent';
-        this.form.reset({ role: 2 });
+        this.form.reset({ role: RoleType.Staff });
       },
       error: (err) => {
         this.loading = false;

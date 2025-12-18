@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../core/services/auth.service';
+import { RoleType } from '../../shared/models/auth.models';
 
 @Component({
   selector: 'bulk-invite',
@@ -21,8 +22,8 @@ import { AuthService } from '../../core/services/auth.service';
       <mat-form-field>
         <mat-label>Role</mat-label>
         <mat-select [(value)]="role">
-          <mat-option [value]="2">Staff</mat-option>
-          <mat-option [value]="3">Doctor</mat-option>
+          <mat-option [value]="RoleType.Staff">Staff</mat-option>
+          <mat-option [value]="RoleType.Doctor">Doctor</mat-option>
         </mat-select>
       </mat-form-field>
       <div style="margin-top:8px">
@@ -41,14 +42,15 @@ import { AuthService } from '../../core/services/auth.service';
   `
 })
 export class BulkInviteComponent {
+  RoleType = RoleType;
   file: File | null = null;
-  role = 2;
+  role: RoleType = RoleType.Staff;
   loading = false;
   result: any = null;
   resultList: string[] = [];
   error = '';
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService) { }
 
   onFile(e: Event) {
     const input = e.target as HTMLInputElement;

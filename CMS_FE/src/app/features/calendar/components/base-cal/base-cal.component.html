@@ -1,0 +1,13 @@
+<div class="calendar-shell">
+  <mat-calendar
+    [selected]="selectedDate()"
+    (selectedChange)="onSelectedChange($event)"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [startAt]="startAt"
+    [startView]="startView"
+    [dateFilter]="dateFilter"
+    [dateClass]="dateClass"
+  >
+  </mat-calendar>
+</div>

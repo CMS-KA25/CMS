@@ -8,6 +8,6 @@ namespace CMS.Domain.EMR.Enums
 {
     public enum ReportType
     {
-        hematology=1, biochemistry=2,microbiology=3,immunology=4,pointofCare=5,maternalcare=6,
+        Hematology=1, Biochemistry=2, Microbiology=3, Immunology=4, PointOfCare=5, MaternalCare=6
     }
 }
